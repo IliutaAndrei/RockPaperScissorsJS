@@ -1,65 +1,71 @@
 let choices = ["rock", "paper", "scissors"];
+let humanScore = 0;
+let computerScore = 0;
 
 function getComputerChoice() {
   return choices[Math.floor(Math.random() * 3)];
 }
 
-function getHumanChoice() {
-  let choice = prompt("Enter your choice: ");
-  if (choice === "rock" || choice === "paper" || choice === "scissors") {
-    return choice;
+function playRound(humanChoice, computerChoice) {
+  humanChoice = humanChoice.toUpperCase();
+  computerChoice = computerChoice.toUpperCase();
+
+  const ROCK = "ROCK";
+  const PAPER = "PAPER";
+  const SCISSORS = "SCISSORS";
+
+  if (
+    (humanChoice === ROCK && computerChoice === PAPER) ||
+    (humanChoice === PAPER && computerChoice === SCISSORS) ||
+    (humanChoice === SCISSORS && computerChoice === ROCK)
+  ) {
+    scoreBoard.textContent = `Computer wins! ${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1).toLowerCase()} beats ${humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1).toLowerCase()}.`;
+    computerScore++;
+  } else if (
+    (humanChoice === ROCK && computerChoice == SCISSORS) ||
+    (humanChoice === PAPER && computerChoice === ROCK) ||
+    (humanChoice === SCISSORS && computerChoice === PAPER)
+  ) {
+    scoreBoard.textContent = `You wins! ${humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1).toLowerCase()} beats ${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1).toLowerCase()}.`;
+    humanScore++;
   } else {
-    choice = prompt("Enter again a valid value: ");
-    return choice;
+    scoreBoard.textContent = "Tie!";
+  }
+
+  humanScoreTab.textContent = "Human: " + humanScore;
+  computerScoreTab.textContent = "Computer: " + computerScore;
+  resetGame();
+}
+
+function resetGame() {
+  if (humanScore === 5) {
+    clearScoreboard();
+    alert(`Human won!`);
+  } else if (computerScore === 5) {
+    clearScoreboard();
+    alert(`Computer won!`);
   }
 }
 
-function playgame() {
-  let humanScore = 0;
-  let computerScore = 0;
-
-  function playRound(humanChoice, computerChoice) {
-    humanChoice = humanChoice.toUpperCase();
-    computerChoice = computerChoice.toUpperCase();
-
-    const ROCK = "ROCK";
-    const PAPER = "PAPER";
-    const SCISSORS = "SCISSORS";
-
-    if (
-      (humanChoice === ROCK && computerChoice === PAPER) ||
-      (humanChoice === PAPER && computerChoice === SCISSORS) ||
-      (humanChoice === SCISSORS && computerChoice === ROCK)
-    ) {
-      console.log(
-        `Computer wins! ${computerChoice.toLowerCase()} beats ${humanChoice.toLowerCase()}.`
-      );
-      computerScore++;
-    } else if (
-      (humanChoice === ROCK && computerChoice == SCISSORS) ||
-      (humanChoice === PAPER && computerChoice === ROCK) ||
-      (humanChoice === SCISSORS && computerChoice === PAPER)
-    ) {
-      console.log(
-        `You wins! ${humanChoice.toLowerCase()} beats ${computerChoice.toLowerCase()}.`
-      );
-      humanScore++;
-    } else {
-      console.log("Tie");
-    }
-  }
-
-  playRound(getHumanChoice(), getComputerChoice())
-  playRound(getHumanChoice(), getComputerChoice())
-  playRound(getHumanChoice(), getComputerChoice())
-  playRound(getHumanChoice(), getComputerChoice())
-  playRound(getHumanChoice(), getComputerChoice())
-
-  if(humanScore > computerScore) {
-    alert(`Human has won! ${humanScore}-${computerScore}`)
-  } else {
-    alert(`Computer has won! ${humanScore}-${computerScore}`)
-  }
+function clearScoreboard() {
+  humanScore = 0;
+  computerScore = 0;
+  scoreBoard.textContent = "";
+  humanScoreTab.textContent = "Human: " + humanScore;;
+  computerScoreTab.textContent = "Computer: " + computerScore;
 }
 
-playgame()
+const buttons = document.querySelectorAll("button");
+const scoreBoard = document.querySelector(".message");
+
+let humanScoreTab = document.querySelector(".human-score");
+let computerScoreTab = document.querySelector(".computer-score");
+
+humanScoreTab.textContent = "Human: " + humanScore;
+computerScoreTab.textContent = "Computer: " + computerScore;
+
+buttons.forEach((b) =>
+  b.addEventListener("click", () =>
+    playRound(b.textContent, getComputerChoice())
+  )
+);
